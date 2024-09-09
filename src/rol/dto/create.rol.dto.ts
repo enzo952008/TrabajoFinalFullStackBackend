@@ -10,7 +10,7 @@ export class CreateRolDto{
     @Length(1,50)
     name: string;
 
-    @IsNumberString()
-    rolId: number;
+    @IsString()
+    rol_id: string;
 
 }

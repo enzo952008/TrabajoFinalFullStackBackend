@@ -17,7 +17,7 @@ export class RolService{
         return roles
     }
 
-    async createOne(createRolDto:CreateRolDto): Promise<Rol>{
+    async createRol(createRolDto:CreateRolDto): Promise<Rol>{
      const rol = this.rolRepository.create({
         ...createRolDto,
      })
