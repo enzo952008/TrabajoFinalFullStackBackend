@@ -22,15 +22,25 @@ export class UserService {
       return users
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findUserById(id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ user_id: id });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+    return user;
+  }
+  
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.preload({
+      user_id: id,
+      ...updateUserDto
+    })
+    if (!user) throw new NotFoundException(`user with id ${id} not found`)
+    return await this.userRepository.save(user)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async deleteUser (id:string){
+    const user = await this.userRepository.findOneBy({user_id: id})
+    if (!user) throw new NotFoundException(`User with id ${id} not found`)
+        return this.userRepository.delete(user)
   }
 }
