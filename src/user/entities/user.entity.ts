@@ -1,6 +1,6 @@
 
 import { Rol } from "src/rol/entities/rol.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
 @Entity('users')
 export class User {
@@ -19,7 +19,11 @@ export class User {
   @Column({ nullable: true })  // Indica que la columna puede ser NULL en la base de datos
   photo_profile_url: string;
 
-  @OneToOne(() => Rol, rol => rol.user)
+  // @OneToOne(() => Rol, rol => rol.user)
+  // @JoinColumn({ name: 'rol_id' })
+  // rol: Rol;
+
+  @ManyToOne(type => Rol, rol => rol.user)
   @JoinColumn({ name: 'rol_id' })
   rol: Rol;
 }
