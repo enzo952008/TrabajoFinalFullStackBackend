@@ -4,10 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { GastronomicPlaceModule } from './gastronomic-places/gastronomic-places.module';
+import { LodgingModule } from './lodging/lodging.module';
 
 
 @Module({
-  imports: [RolModule, UserModule, GastronomicPlaceModule],
+  imports: [RolModule, UserModule, LodgingModule],
   controllers: [],
   providers: [],
 })
