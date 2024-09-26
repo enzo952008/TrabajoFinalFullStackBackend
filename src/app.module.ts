@@ -8,7 +8,7 @@ import { LodgingModule } from './lodging/lodging.module';
 
 
 @Module({
-  imports: [RolModule, UserModule, LodgingModule],
+  imports: [RolModule, UserModule, LodgingModule, GastronomicPlaceModule],
   controllers: [],
   providers: [],
 })
