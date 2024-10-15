@@ -6,11 +6,11 @@ export const databaseProviders = [
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'mysql',
-        host: 'localhost',
-        port: 3307,
-        username: 'root',
-        password: 'tgbrfv999X8',
-        database: 'briosc',
+        host: 'bxumyomcz1nedvihvfem-mysql.services.clever-cloud.com',
+        port: 3306,
+        username: 'uhu5qlsekpydjqsn',
+        password: 'XLEdvbIVi9AEdHUmzrDV',
+        database: 'bxumyomcz1nedvihvfem',
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
         ],
