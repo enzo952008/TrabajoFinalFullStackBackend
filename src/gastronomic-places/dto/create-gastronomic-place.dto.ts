@@ -13,5 +13,8 @@ export class CreateGastronomicPlaceDto {
   @IsUrl({}, { message: 'La URL de la imagen debe ser válida' })
   @IsNotEmpty({ message: 'La URL de la imagen es obligatoria' })
   image_url: string;
-}
 
+  @IsUrl({}, { message: 'La URL de contacto debe ser válida' })
+  @IsNotEmpty({ message: 'La URL de contacto es obligatoria' })
+  contact_url: string;
+}
