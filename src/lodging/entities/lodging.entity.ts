@@ -25,4 +25,7 @@ export class Lodging {
     })
     type: LodgingType;
 
+    @Column()
+    contact_url: string;
+
 }
