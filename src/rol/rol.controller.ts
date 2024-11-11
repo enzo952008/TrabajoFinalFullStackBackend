@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
 import { RolService } from "./rol.service";
 import { Get } from "@nestjs/common";
 import { CreateRolDto } from "./dto/create.rol.dto";
@@ -11,6 +11,7 @@ export class RolController {
     constructor(private readonly rolService: RolService) { }
 
     @Get()
+    @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Obtener todos los roles' })
     @ApiResponse({ status: 200, description: 'Roles obtenidos exitosamente' })
     @ApiResponse({ status: 404, description: 'No se encontraron roles en la base de datos' })
@@ -19,6 +20,7 @@ export class RolController {
     }
 
     @Post()
+    @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Crear un nuevo rol' })
     @ApiResponse({ status: 201, description: 'Rol creado exitosamente' })
     @ApiResponse({ status: 400, description: 'Datos de solicitud inválidos' })
@@ -28,6 +30,7 @@ export class RolController {
     }
 
     @Patch('/:id')
+    @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Actualizar un rol existente' })
     @ApiParam({ name: 'id', description: 'ID del rol a actualizar' })
     @ApiResponse({ status: 200, description: 'Rol actualizado exitosamente' })
@@ -40,6 +43,7 @@ export class RolController {
     }
 
     @Delete('/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation({ summary: 'Eliminar un rol por ID' })
     @ApiParam({ name: 'id', description: 'ID del rol a eliminar' })
     @ApiResponse({ status: 204, description: 'Rol eliminado exitosamente' })
