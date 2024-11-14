@@ -53,6 +53,15 @@ export class UserService {
     return user;
   }
 
+  // Buscar un usuario por correo electrónico
+  async findByEmail(mail: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ mail });
+    if (!user) {
+      throw new NotFoundException(`Usuario con el correo ${mail} no encontrado`);
+    }
+    return user;
+  }
+
   // Actualizar un usuario
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.preload({
