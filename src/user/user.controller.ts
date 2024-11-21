@@ -7,12 +7,16 @@ import {
   Param, 
   Delete, 
   HttpCode, 
-  HttpStatus 
+  HttpStatus, 
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 
 @ApiTags('Usuarios')
 @Controller('/users')
@@ -25,7 +29,11 @@ export class UserController {
   @ApiOperation({ summary: 'Crear un nuevo usuario' })
   @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos de solicitud inválidos' })
-  async createUser(@Body() createUserDto: CreateUserDto) {
+  @UseInterceptors(FileInterceptor('file'))
+  async createUser(@UploadedFile() file: Express.Multer.File, @Body() createUserDto: CreateUserDto) {
+
+    const filename = file?.filename ||  '' ;
+
     return this.userService.createUser(createUserDto);
   }
 
@@ -52,15 +60,39 @@ export class UserController {
 
   // Actualizar un usuario por ID
   @Patch('/:id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Actualizar un usuario por ID' })
-  @ApiParam({ name: 'id', description: 'ID del usuario a actualizar' })
-  @ApiBody({ type: UpdateUserDto, description: 'Datos a actualizar del usuario' })
-  @ApiResponse({ status: 200, description: 'Usuario actualizado exitosamente' })
-  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
-  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.updateUser(id, updateUserDto);
-  }
+@HttpCode(HttpStatus.OK)
+@ApiOperation({ summary: 'Actualizar un usuario por ID con archivo' })
+@ApiParam({ name: 'id', description: 'ID del usuario a actualizar' })
+@ApiBody({
+  schema: {
+    type: 'object',
+    properties: {
+      file: {
+        type: 'string',
+        format: 'binary', // Indica que se espera un archivo
+      },
+      updateUserDto: {
+        type: 'object',
+        $ref: '#/components/schemas/UpdateUserDto',
+      },
+    },
+  },
+})
+@ApiResponse({ status: 200, description: 'Usuario actualizado exitosamente' })
+@ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+@UseInterceptors(FileInterceptor('file')) // Maneja el archivo subido
+async updateUser(
+  @Param('id') id: string,
+  @UploadedFile() file: Express.Multer.File, // Archivo cargado (opcional)
+  @Body() updateUserDto: UpdateUserDto // Datos a actualizar
+) {
+  // Verifica si hay un archivo y toma el nombre
+  const filename = file?.filename || null;
+
+  // Llama al servicio con el archivo (si existe) y los datos
+  return this.userService.updateUser(id, updateUserDto, filename);
+}
+
 
   // Eliminar un usuario por ID
   @Delete('/:id')
