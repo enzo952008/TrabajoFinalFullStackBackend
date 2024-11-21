@@ -11,9 +11,11 @@ export class AuthController {
 async login(@Body() loginDto: LoginDto) {
     const user = await this.authService.validateUser(loginDto.mail, loginDto.password);
     return this.authService.login(user);
+    
+    
 }
 
-  @Post('register')
+  /*@Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     // Validación adicional: asegurar que el email no esté ya registrado
     const existingUser = await this.authService.validateUser(createUserDto.mail, createUserDto.password);
@@ -26,6 +28,6 @@ async login(@Body() loginDto: LoginDto) {
 
     // Opcionalmente, iniciar sesión automáticamente después del registro
     return this.authService.login(user);
-  }
+  }*/
 }
 
