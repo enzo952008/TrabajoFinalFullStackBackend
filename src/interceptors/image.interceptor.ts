@@ -2,42 +2,43 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { FileInterceptor as MulterInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import * as crypto from 'crypto'; // Asegúrate de importar crypto explícitamente
+
 @Injectable()
 export class FileInterceptor {
   static createFileInterceptor(fieldName: string) {
     return MulterInterceptor(fieldName, {
       storage: diskStorage({
-        //configuramos el almacenamiento en disco
-        destination: './uploads', //carpeta donde se guardaran los archivos subidos
+        // Configuración de almacenamiento en disco
+        destination: './uploads', // Carpeta donde se guardarán los archivos
         filename: (req, file, callback) => {
-          //funcion para estandarizar nombre de archivo
-          const uniqueSuffix = crypto.randomUUID();
-          const ext = extname(file.originalname); //extraemos la extension original del archivo
+          // Generar un nombre único para el archivo
+          const uniqueSuffix = crypto.randomUUID(); // Nombre único
+          const ext = extname(file.originalname); // Extensión del archivo original
           const filename = `photo-${uniqueSuffix}${ext}`;
-          //combinamos  el sufijo que es el nombre aleatorio del archivo, le anteponemos la palabra 'photo' y lo finalizamos con la extension original
-          callback(null, filename);
+          callback(null, filename); // Pasar el nombre al callback
         },
       }),
       fileFilter: (req, file, callback) => {
-        //regexp para los tipos de archivos permitidos
+        // Tipos de archivo permitidos
         const allowedTypes = /jpeg|jpg|png|gif/;
-        //obtenemos la extension del archivo
-        const ext = extname(file.originalname).toLowerCase();
-        //verficar si el tipo MIME del archivo es permitido
+
+        // Validar tipo MIME y extensión
         const mimeType = allowedTypes.test(file.mimetype);
-        //verficar si la extension del archivo es permitida
-        const extName = allowedTypes.test(ext);
+        const extName = allowedTypes.test(extname(file.originalname).toLowerCase());
+
         if (mimeType && extName) {
-          return callback(null, true);
-          //si el archivo es una imagen y tiene una extension permitida llamamos al callback sin errores, por lo tanto, pasamos el filtro de seguridad y continuamos al controller
+          callback(null, true); // Aceptar el archivo
         } else {
           callback(
-            new BadRequestException('Only image files are allowed'),
+            new BadRequestException('Solo se permiten archivos de imagen (JPEG, PNG, GIF)'),
             false,
-          );
+          ); // Rechazar el archivo
         }
       },
-      limits: { fileSize: 2 * 1024 * 1024 }, //limitamos el tamaño a dos megabytes
+      limits: {
+        fileSize: 2 * 1024 * 1024, // Limitar tamaño a 2 MB
+      },
     });
   }
 }

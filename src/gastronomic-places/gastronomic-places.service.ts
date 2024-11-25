@@ -29,14 +29,21 @@ export class GastronomicPlaceService {
     return place;
   }
 
-  async updateGastronomicPlace(id: string, updateGastronomicPlaceDto: UpdateGastronomicPlaceDto): Promise<GastronomicPlace> {
+  async updateGastronomicPlace(
+    id: string,
+    updateGastronomicPlaceDto: UpdateGastronomicPlaceDto,
+    imageUrl: string | null,
+  ): Promise<GastronomicPlace> {
     const place = await this.gastronomicPlaceRepository.preload({
       id,
       ...updateGastronomicPlaceDto,
+      ...(imageUrl && { image_url: imageUrl }), // Solo actualiza `image_url` si hay una nueva imagen
     });
+  
     if (!place) {
       throw new NotFoundException(`No se encontró el lugar gastronómico con id ${id}`);
     }
+  
     return await this.gastronomicPlaceRepository.save(place);
   }
 
