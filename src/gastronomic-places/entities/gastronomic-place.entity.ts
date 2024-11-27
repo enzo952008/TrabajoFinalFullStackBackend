@@ -17,3 +17,4 @@ export class GastronomicPlace {
     @Column()
     contact_url: string;
 }
+

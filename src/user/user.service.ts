@@ -20,6 +20,9 @@ export class UserService {
     const { password, ...userData } = createUserDto;
     const hashedPassword = await this.hashPassword(password);
 
+    
+
+
     // Crear el usuario con la contraseña encriptada
     const user = this.userRepository.create({
       ...userData,
@@ -28,6 +31,7 @@ export class UserService {
 
     return this.userRepository.save(user);
   }
+
 
   // Método para encriptar contraseñas
   async hashPassword(password: string): Promise<string> {
@@ -63,16 +67,27 @@ export class UserService {
   }
 
   // Actualizar un usuario
-  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+  async updateUser(id: string, updateUserDto: UpdateUserDto, filename: string): Promise<any> {
+    // Intenta cargar el usuario existente
     const user = await this.userRepository.preload({
       user_id: id,
       ...updateUserDto,
     });
+  
+    // Si el usuario no existe, lanza una excepción
     if (!user) {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
+  
+    // Si se proporcionó un archivo, actualiza el campo correspondiente
+    if (filename) {
+      user.photo_profile_url = filename; // Cambia 'profilePicture' por el nombre del campo en tu entidad
+    }
+  
+    // Guarda el usuario actualizado en la base de datos
     return await this.userRepository.save(user);
   }
+  
 
   // Eliminar un usuario
   async deleteUser(id: string) {
