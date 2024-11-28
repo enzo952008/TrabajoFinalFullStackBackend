@@ -12,9 +12,17 @@ export class LodgingService {
     private readonly lodgingRepository: Repository<Lodging>,
   ) {}
 
-  async createLodging(createLodgingDto: CreateLodgingDto): Promise <Lodging> {
-    const lodging = this.lodgingRepository.create(createLodgingDto)
-
+  async createLodging(createLodgingDto: CreateLodgingDto, file: Express.Multer.File): Promise<Lodging> {
+    // Crear la URL de la imagen cargada
+    const image_lodging_url = `/uploads/lodgings/${file.filename}`; // Cambiamos el nombre de la variable
+  
+    // Crear el objeto del alojamiento con la URL de la imagen
+    const lodging = this.lodgingRepository.create({
+      ...createLodgingDto,
+      image_lodging_url, // Usamos el campo correcto
+    });
+  
+    // Guardar el alojamiento en la base de datos
     return this.lodgingRepository.save(lodging);
   }
 
