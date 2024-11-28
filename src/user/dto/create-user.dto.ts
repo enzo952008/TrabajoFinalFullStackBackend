@@ -30,11 +30,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     readonly mail: string;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    readonly photo_profile_url: string;
-
+   
     @ApiProperty()
     @IsString()
     readonly rol_id: string;
