@@ -15,19 +15,16 @@ async login(@Body() loginDto: LoginDto) {
     
 }
 
-  /*@Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+ @Post('register')
+   async register(@Body() createUserDto: CreateUserDto) {
     // Validación adicional: asegurar que el email no esté ya registrado
-    const existingUser = await this.authService.validateUser(createUserDto.mail, createUserDto.password);
-    if (existingUser) {
+     const existingUser = await this.authService.validateUser(createUserDto.mail, createUserDto.password);
+     if (existingUser) {
       throw new BadRequestException('El correo electrónico ya está registrado');
-    }
-
-    // Crear usuario con AuthService
-    const user = await this.authService.register(createUserDto);
-
-    // Opcionalmente, iniciar sesión automáticamente después del registro
+     }
+     const user = await this.authService.register(createUserDto);
     return this.authService.login(user);
-  }*/
+  
+}
 }
 

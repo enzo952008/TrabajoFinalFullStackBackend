@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -36,14 +37,12 @@ export class AuthService {
     throw new UnauthorizedException('Credenciales inválidas');
   }
 
-  async login(user: any) {
-    console.log('Contenido de user:', user); // Esto te mostrará el contenido de user en la consola
-  
-    if (!user) {
-      throw new UnauthorizedException('Usuario no válido');
-    }
-  
-    const payload = { username: user.mail, sub: user.user_id };
+  async login(user: User) {
+    const payload = { 
+      sub: user.user_id, 
+      username: user.name, // Incluye el nombre del usuario
+      mail: user.mail // Mantén el correo si es necesario
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };
